@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import { Router } from 'express';
 import axios from 'axios';
 
 const router = Router();
-const FLASK_URL = 'http://localhost:5000';
+const FLASK_URL = process.env.FLASK_URL || 'http://localhost:5000';
 
 // Leidsa
 router.get('/leidsa', async (req, res) => {

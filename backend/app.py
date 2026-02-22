@@ -8,6 +8,8 @@ from xml.etree import ElementTree as ET
 import os
 import json
 
+LOTTERY_JSON = os.path.join(os.path.dirname(__file__), 'lottery.json')
+
 
 def load_html(search_date=None):
 
@@ -69,7 +71,7 @@ def scraping(search_date=None, search_lotery=None):
 	data = []
 	loteries_parser = []
   # Cargar JSON en un Archivo
-	with open('lottery.json', 'r', encoding='utf-8') as file:
+	with open(LOTTERY_JSON, 'r', encoding='utf-8') as file:
 		json_data = file.read()
 		data = json.loads(json_data)
 
@@ -106,7 +108,7 @@ def scrapingByName(search_name,search_date=None, search_lotery=None):
 	data = []
 	loteries_parser = []
   # Cargar JSON en un Archivo
-	with open('lottery.json', 'r', encoding='utf-8') as file:
+	with open(LOTTERY_JSON, 'r', encoding='utf-8') as file:
 		json_data = file.read()
 		data = json.loads(json_data)
 
