@@ -111,6 +111,57 @@ body.light-mode .premio-item {
   color: var(--text-primary);
 }
 
+/* Dropdown icons and badges */
+.drop-icon {
+  margin-right: 0.35rem;
+  font-style: normal;
+}
+
+.badge-pronto {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 20px;
+  background-color: var(--border-color);
+  color: var(--text-secondary);
+  margin-left: 0.35rem;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+}
+
+/* Anúnciate link — discreto */
+.nav-link-advertise {
+  font-size: 0.83rem !important;
+  opacity: 0.75;
+  transition: opacity 0.2s !important;
+}
+
+.nav-link-advertise:hover,
+.nav-link-advertise:focus {
+  opacity: 1 !important;
+}
+
+.nav-link-advertise.active-page {
+  opacity: 1;
+  color: var(--gold) !important;
+}
+
+/* Consultar link */
+.nav-link-consultar {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  padding: 0.4rem 0.9rem !important;
+  font-weight: 600 !important;
+  transition: background-color 0.2s, border-color 0.2s !important;
+}
+
+.nav-link-consultar:hover,
+.nav-link-consultar:focus {
+  background-color: var(--border-color) !important;
+  border-color: var(--text-secondary) !important;
+}
+
 /* Toggle button */
 .btn-toggle-mode {
   border: 1px solid var(--border-color);
@@ -274,18 +325,27 @@ body.light-mode .premio-item {
   transition: color 0.3s ease;
 }
 
-/* Estado: cargando */
+/* Estado: cargando — skeleton shimmer */
 .premio-numero.loading {
-  color: var(--loading-color);
-  font-size: 1.2rem;
-  font-weight: 400;
-  letter-spacing: 0.15em;
-  animation: pulse 1.5s ease-in-out infinite;
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    var(--border-color) 50%,
+    var(--bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
+  border-radius: 8px;
+  min-width: 88px;
+  height: 2rem;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.35; }
+@keyframes skeleton-sweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* Estado: error */
@@ -338,6 +398,467 @@ footer {
 .footer-divider {
   border-color: var(--border-color);
   margin: 1.25rem 0 1rem;
+}
+
+/* Social icons */
+.footer-social {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.footer-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background-color: var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.footer-social-link:hover {
+  background-color: var(--gold);
+  color: #0f172a;
+}
+
+/* Chevron icons in footer links */
+.footer-chevron {
+  color: var(--gold);
+  font-size: 0.65rem;
+}
+
+/* ================================================
+   CARD BADGE (Hoy / fecha anterior)
+================================================ */
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.18rem 0.5rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* ================================================
+   REFRESH FAB
+================================================ */
+.btn-refresh {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #0f172a;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, transform 0.2s;
+  z-index: 900;
+}
+
+.btn-refresh:hover {
+  background: var(--gold-light);
+  transform: scale(1.08);
+}
+
+.btn-refresh.spinning i {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ================================================
+   STATS PANEL
+================================================ */
+.stats-panel {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.1rem 0 1.5rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.stats-tabs {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.stats-tab {
+  background: var(--border-color);
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.83rem;
+  font-weight: 600;
+  padding: 0.42rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.stats-tab:hover {
+  color: var(--text-primary);
+}
+
+.stats-tab.active {
+  background: var(--gold);
+  color: #0f172a;
+}
+
+.stats-close {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.stats-close:hover {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+.stats-note {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+}
+
+/* Freq list (Calientes / Fríos) */
+.freq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-width: 480px;
+}
+
+.freq-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.freq-num {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  min-width: 34px;
+  text-align: center;
+}
+
+.freq-bar-wrap {
+  flex: 1;
+  background: var(--border-color);
+  border-radius: 6px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.freq-bar {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  transition: width 0.5s ease;
+}
+
+.freq-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 26px;
+  text-align: right;
+}
+
+/* Resultados Anteriores */
+.anteriores-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+
+.anteriores-picker > i {
+  color: var(--gold);
+}
+
+.anteriores-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.anteriores-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  flex-wrap: wrap;
+  transition: border-color 0.2s, background-color 0.3s ease;
+}
+
+.anteriores-row:hover {
+  border-color: var(--gold);
+}
+
+.ant-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 120px;
+  font-size: 0.88rem;
+}
+
+.ant-fecha {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.ant-num {
+  font-weight: 900;
+  color: var(--gold);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ================================================
+   DATE PICKER
+================================================ */
+.date-picker-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.date-picker-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.55rem 1.1rem;
+  transition: border-color 0.2s, background-color 0.3s ease;
+}
+
+.date-picker-inner:focus-within {
+  border-color: var(--gold);
+}
+
+.date-picker-inner > i {
+  color: var(--gold);
+  font-size: 0.88rem;
+  flex-shrink: 0;
+}
+
+.date-input {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  min-width: 130px;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+body.light-mode .date-input::-webkit-calendar-picker-indicator {
+  filter: none;
+}
+
+.btn-hoy {
+  background: var(--border-color);
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn-hoy:hover {
+  background: var(--gold);
+  color: #0f172a;
+}
+
+/* ================================================
+   CONSULTAR NÚMEROS
+================================================ */
+.consultar-section {
+  padding: 3.5rem 0 5rem;
+  border-top: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.consultar-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
+}
+
+.consultar-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.consultar-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.numero-input {
+  width: 68px;
+  height: 68px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--gold);
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  outline: none;
+  font-variant-numeric: tabular-nums;
+  font-family: inherit;
+  transition: border-color 0.2s, background-color 0.3s ease;
+}
+
+.numero-input:focus {
+  border-color: var(--gold);
+}
+
+.numero-input::placeholder {
+  color: var(--loading-color);
+  font-weight: 400;
+  font-size: 1.4rem;
+}
+
+.btn-consultar {
+  height: 68px;
+  padding: 0 1.5rem;
+  background: var(--gold);
+  color: #0f172a;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-consultar:hover {
+  background: var(--gold-light);
+}
+
+.consultar-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.consultar-match {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: border-color 0.2s, background-color 0.3s ease;
+  flex-wrap: wrap;
+}
+
+.consultar-match:hover {
+  border-color: var(--gold);
+}
+
+.match-check {
+  color: #22c55e;
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.match-loteria {
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 120px;
+  font-size: 0.9rem;
+}
+
+.match-fecha {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.match-numero {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.consultar-vacio,
+.consultar-loading {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 2.5rem 1rem;
 }
 
 /* ================================================

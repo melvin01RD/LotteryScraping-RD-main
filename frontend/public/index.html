@@ -10,61 +10,184 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
   <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg">
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
       <a href="index.html" class="navbar-brand brand-custom">🎰 TuNumeroLoteriaRD</a>
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto align-items-center">
+        <ul class="navbar-nav ms-auto align-items-center gap-1">
+
+          <!-- Loterías dropdown -->
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Loterías</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Lotería Nacional</a></li>
-              <li><a class="dropdown-item" href="#">Leidsa</a></li>
-              <li><a class="dropdown-item" href="#">Loteka</a></li>
-              <li><a class="dropdown-item" href="#">Lotería Real</a></li>
-              <li><a class="dropdown-item" href="#">La Suerte</a></li>
-              <li><a class="dropdown-item" href="#">La Primera</a></li>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Loterías
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item nav-scroll" href="#" data-target="card-nacional">
+                  <span class="drop-icon">🏆</span> Lotería Nacional
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item nav-scroll" href="#" data-target="card-leidsa">
+                  <span class="drop-icon">🎰</span> Leidsa
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item nav-scroll" href="#" data-target="card-loteka">
+                  <span class="drop-icon">🎯</span> Loteka
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item nav-scroll" href="#" data-target="card-real">
+                  <span class="drop-icon">👑</span> Lotería Real
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item nav-scroll" href="#" data-target="card-primera">
+                  <span class="drop-icon">⭐</span> La Primera
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item nav-scroll" href="#" data-target="card-suerte">
+                  <span class="drop-icon">🍀</span> La Suerte Dominicana
+                </a>
+              </li>
+              <li><hr class="dropdown-divider my-1" /></li>
+              <li>
+                <a class="dropdown-item text-muted" href="#">
+                  <span class="drop-icon">🌊</span> Anguila
+                  <span class="badge-pronto">Próximamente</span>
+                </a>
+              </li>
             </ul>
           </li>
-          <li class="nav-item d-flex align-items-center ms-2">
+
+          <!-- Estadísticas dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Estadísticas
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item stats-nav-link" href="#" data-stats="calientes">
+                  <span class="drop-icon">🔥</span> Números Calientes
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item stats-nav-link" href="#" data-stats="frios">
+                  <span class="drop-icon">❄️</span> Números Fríos
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item stats-nav-link" href="#" data-stats="anteriores">
+                  <span class="drop-icon">📅</span> Resultados Anteriores
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Consultar Números (link directo) -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-consultar nav-scroll" href="#" data-target="seccion-consultar">
+              <i class="fas fa-search me-1"></i> Consultar
+            </a>
+          </li>
+
+          <!-- Anúnciate -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-advertise" href="advertise.html">
+              <i class="fas fa-bullhorn me-1"></i> Anúnciate
+            </a>
+          </li>
+
+          <!-- Toggle Claro / Oscuro -->
+          <li class="nav-item d-flex align-items-center ms-1">
             <button id="toggleDarkMode" class="btn btn-sm btn-toggle-mode" title="Modo Claro">
               <i class="fas fa-sun"></i>
             </button>
           </li>
+
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Hero -->
+  <!-- ===================== STATS PANEL ===================== -->
+  <div id="stats-panel" class="stats-panel" hidden>
+    <div class="container">
+      <div class="stats-header">
+        <div class="stats-tabs">
+          <button class="stats-tab" data-tab="calientes">🔥 Calientes</button>
+          <button class="stats-tab" data-tab="frios">❄️ Fríos</button>
+          <button class="stats-tab" data-tab="anteriores">📅 Anteriores</button>
+        </div>
+        <button class="stats-close" id="btn-stats-close" aria-label="Cerrar panel">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div id="tab-calientes" class="stats-pane">
+        <p class="stats-note">Números que más veces aparecieron en los resultados más recientes.</p>
+        <div id="calientes-content"></div>
+      </div>
+
+      <div id="tab-frios" class="stats-pane" hidden>
+        <p class="stats-note">Números que menos veces aparecieron en los resultados más recientes.</p>
+        <div id="frios-content"></div>
+      </div>
+
+      <div id="tab-anteriores" class="stats-pane" hidden>
+        <div class="anteriores-picker">
+          <i class="fas fa-calendar-alt"></i>
+          <input type="date" id="fecha-anteriores" class="date-input" />
+          <button id="btn-buscar-anteriores" class="btn-hoy">Buscar</button>
+        </div>
+        <div id="anteriores-content" class="anteriores-resultados"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== HERO ===================== -->
   <section class="hero-section">
     <div class="container text-center">
-      <h1 class="hero-title">Resultados de Hoy</h1>
+      <h1 class="hero-title" id="hero-title">Resultados de Hoy</h1>
       <p class="hero-subtitle">Números ganadores de las principales loterías dominicanas</p>
+
+      <!-- Date Picker -->
+      <div class="date-picker-wrapper mt-3">
+        <div class="date-picker-inner">
+          <i class="fas fa-calendar-alt"></i>
+          <input type="date" id="fecha-picker" class="date-input" />
+          <button id="btn-hoy" class="btn-hoy">Hoy</button>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Cards -->
+  <!-- ===================== CARDS ===================== -->
   <main class="container main-content">
     <div class="row g-4">
 
       <!-- Lotería Nacional -->
-      <div class="col-md-6">
+      <div class="col-md-6" id="card-nacional">
         <div class="lottery-card">
           <div class="card-header-custom" style="--gc1: #3b82f6; --gc2: #1d4ed8;">
             <span class="card-icon">🏆</span>
             <span class="card-name">Lotería Nacional</span>
+            <span id="badge-nacional" class="card-badge ms-auto"></span>
           </div>
           <div class="card-body-custom">
             <div class="fecha-badge">
@@ -90,11 +213,12 @@
       </div>
 
       <!-- Leidsa -->
-      <div class="col-md-6">
+      <div class="col-md-6" id="card-leidsa">
         <div class="lottery-card">
           <div class="card-header-custom" style="--gc1: #22c55e; --gc2: #15803d;">
             <span class="card-icon">🎰</span>
             <span class="card-name">Leidsa</span>
+            <span id="badge-leidsa" class="card-badge ms-auto"></span>
           </div>
           <div class="card-body-custom">
             <div class="fecha-badge">
@@ -120,11 +244,12 @@
       </div>
 
       <!-- Loteka -->
-      <div class="col-md-6">
+      <div class="col-md-6" id="card-loteka">
         <div class="lottery-card">
           <div class="card-header-custom" style="--gc1: #f97316; --gc2: #c2410c;">
             <span class="card-icon">🎯</span>
             <span class="card-name">Loteka</span>
+            <span id="badge-loteka" class="card-badge ms-auto"></span>
           </div>
           <div class="card-body-custom">
             <div class="fecha-badge">
@@ -150,11 +275,12 @@
       </div>
 
       <!-- Lotería Real -->
-      <div class="col-md-6">
+      <div class="col-md-6" id="card-real">
         <div class="lottery-card">
           <div class="card-header-custom" style="--gc1: #ef4444; --gc2: #b91c1c;">
             <span class="card-icon">👑</span>
             <span class="card-name">Lotería Real</span>
+            <span id="badge-real" class="card-badge ms-auto"></span>
           </div>
           <div class="card-body-custom">
             <div class="fecha-badge">
@@ -180,11 +306,12 @@
       </div>
 
       <!-- La Suerte -->
-      <div class="col-md-6">
+      <div class="col-md-6" id="card-suerte">
         <div class="lottery-card">
           <div class="card-header-custom" style="--gc1: #a855f7; --gc2: #7e22ce;">
             <span class="card-icon">🍀</span>
             <span class="card-name">La Suerte Dominicana</span>
+            <span id="badge-suerte" class="card-badge ms-auto"></span>
           </div>
           <div class="card-body-custom">
             <div class="fecha-badge">
@@ -210,11 +337,12 @@
       </div>
 
       <!-- La Primera -->
-      <div class="col-md-6">
+      <div class="col-md-6" id="card-primera">
         <div class="lottery-card">
           <div class="card-header-custom" style="--gc1: #14b8a6; --gc2: #0f766e;">
             <span class="card-icon">⭐</span>
             <span class="card-name">La Primera</span>
+            <span id="badge-primera" class="card-badge ms-auto"></span>
           </div>
           <div class="card-body-custom">
             <div class="fecha-badge">
@@ -242,33 +370,83 @@
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="py-4">
+  <!-- ===================== CONSULTAR NÚMEROS ===================== -->
+  <section id="seccion-consultar" class="consultar-section">
     <div class="container">
-      <div class="row g-3">
+      <h2 class="consultar-title">Consultar Números</h2>
+      <p class="consultar-subtitle">¿Salió tu número? Búscalo en todas las loterías</p>
+
+      <div class="consultar-inputs">
+        <input type="text" class="numero-input" id="num1" maxlength="2" placeholder="00" inputmode="numeric" />
+        <input type="text" class="numero-input" id="num2" maxlength="2" placeholder="00" inputmode="numeric" />
+        <input type="text" class="numero-input" id="num3" maxlength="2" placeholder="00" inputmode="numeric" />
+        <button id="btn-consultar" class="btn-consultar">
+          <i class="fas fa-search me-1"></i>Consultar
+        </button>
+      </div>
+
+      <div id="consultar-resultados" class="consultar-resultados"></div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="py-5">
+    <div class="container">
+      <div class="row g-4">
+
+        <!-- Columna 1: Marca + redes -->
         <div class="col-md-4">
-          <p class="footer-brand mb-1">🎰 TuNumeroLoteriaRD</p>
-          <p class="footer-text mb-0">Resultados de loterías dominicanas en tiempo real.</p>
+          <p class="footer-brand mb-2">🎰 TuNumeroLoteriaRD</p>
+          <p class="footer-text mb-3">Resultados de loterías dominicanas en tiempo real.</p>
+          <div class="footer-social">
+            <a href="#" class="footer-social-link" title="Facebook" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="footer-social-link" title="Instagram" aria-label="Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="footer-social-link" title="Twitter / X" aria-label="Twitter">
+              <i class="fab fa-x-twitter"></i>
+            </a>
+            <a href="#" class="footer-social-link" title="WhatsApp" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+          </div>
         </div>
+
+        <!-- Columna 2: Páginas -->
         <div class="col-md-4">
-          <p class="footer-heading mb-2">Páginas</p>
+          <p class="footer-heading mb-3">Páginas</p>
           <ul class="list-unstyled footer-text mb-0">
-            <li><a href="pages/nosotros.html">Nosotros</a></li>
-            <li><a href="pages/contacto.html">Contacto</a></li>
-            <li><a href="pages/privacidad.html">Política de Privacidad</a></li>
+            <li><a href="pages/nosotros.html"><i class="fas fa-chevron-right me-1 footer-chevron"></i>Nosotros</a></li>
+            <li><a href="pages/contacto.html"><i class="fas fa-chevron-right me-1 footer-chevron"></i>Contacto</a></li>
+            <li><a href="pages/privacidad.html"><i class="fas fa-chevron-right me-1 footer-chevron"></i>Política de Privacidad</a></li>
+            <li><a href="advertise.html"><i class="fas fa-chevron-right me-1 footer-chevron"></i>Anúnciate</a></li>
           </ul>
         </div>
+
+        <!-- Columna 3: Aviso -->
         <div class="col-md-4">
-          <p class="footer-heading mb-2">Aviso legal</p>
+          <p class="footer-heading mb-3">Aviso legal</p>
           <p class="footer-text mb-0">Los resultados son extraídos de fuentes públicas. Verifique siempre en el establecimiento oficial.</p>
         </div>
+
       </div>
+
       <hr class="footer-divider" />
-      <p class="text-center footer-text mb-0">© 2025 TuNumeroLoteriaRD. Todos los derechos reservados.</p>
+
+      <p class="text-center footer-text mb-0">
+        © <span id="footer-year"></span> TuNumeroLoteriaRD. Todos los derechos reservados.
+      </p>
     </div>
   </footer>
 
-  <!-- Bootstrap JS (bundle incluye Popper) -->
+  <!-- Refresh FAB -->
+  <button id="btn-refresh" class="btn-refresh" title="Actualizar resultados" aria-label="Actualizar resultados">
+    <i class="fas fa-sync-alt"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Custom JS -->
   <script src="app.js"></script>

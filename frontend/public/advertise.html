@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anúnciate — TuNumeroLoteriaRD</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ── Hero ── */
+    .adv-hero {
+      padding: 5rem 0 4rem;
+      background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #1e293b 100%);
+      text-align: center;
+    }
+    .adv-hero .hero-title  { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.75rem; }
+    .adv-hero .hero-subtitle {
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto 2rem;
+      color: rgba(255,255,255,0.75);
+    }
+    .adv-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gold);
+      color: #0f172a;
+      font-weight: 700;
+      padding: 0.8rem 2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: background-color 0.2s;
+    }
+    .adv-cta:hover { background: var(--gold-light); color: #0f172a; }
+
+    /* ── Sections ── */
+    .adv-section { padding: 3.5rem 0; }
+    .adv-section + .adv-section { border-top: 1px solid var(--border-color); }
+    .adv-section-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+    }
+    .adv-section-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem; }
+
+    /* ── Stat cards ── */
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      height: 100%;
+      transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+    .stat-emoji  { font-size: 2.2rem; line-height: 1; margin-bottom: 0.75rem; }
+    .stat-value  { font-size: 1.55rem; font-weight: 900; color: var(--gold); letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+    .stat-label  { color: var(--text-secondary); font-size: 0.82rem; font-weight: 500; }
+
+    /* ── Plan cards ── */
+    .plan-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease;
+    }
+    .plan-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+    .plan-card.featured {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 1px var(--gold), var(--shadow);
+    }
+    .plan-badge-top {
+      text-align: center;
+      background: var(--gold);
+      color: #0f172a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem;
+      letter-spacing: 0.05em;
+    }
+    .plan-header {
+      padding: 1.4rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .plan-icon { font-size: 1.8rem; line-height: 1; }
+    .plan-name { font-size: 1.05rem; font-weight: 700; color: #fff; }
+    .plan-body  { padding: 1.4rem 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 0.9rem; }
+    .plan-desc  { color: var(--text-secondary); font-size: 0.87rem; line-height: 1.65; }
+    .plan-features { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      color: var(--text-secondary);
+      font-size: 0.83rem;
+    }
+    .plan-features li::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+    .plan-price {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-color);
+      padding-top: 0.75rem;
+      margin-top: auto;
+    }
+    .plan-price span { color: var(--gold); }
+    .plan-actions { display: flex; gap: 0.5rem; }
+    .btn-plan-email {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      background: var(--gold);
+      color: #0f172a;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.87rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+    .btn-plan-email:hover { background: var(--gold-light); color: #0f172a; }
+    .btn-plan-wa {
+      padding: 0.6rem 0.9rem;
+      background: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+    .btn-plan-wa:hover { background: #1fba58; color: #fff; }
+
+    /* ── Contact form ── */
+    .form-wrapper  { max-width: 640px; }
+    .form-row-two  { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 575px) { .form-row-two { grid-template-columns: 1fr; } }
+    .form-group-adv { margin-bottom: 1.1rem; }
+    .form-label-adv {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .form-control-adv {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, background-color 0.3s ease;
+    }
+    .form-control-adv:focus { border-color: var(--gold); }
+    .form-control-adv::placeholder { color: var(--loading-color); }
+    textarea.form-control-adv { resize: vertical; min-height: 120px; }
+    .btn-submit-adv {
+      background: var(--gold);
+      color: #0f172a;
+      border: none;
+      border-radius: 12px;
+      padding: 0.85rem 2rem;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-submit-adv:hover { background: var(--gold-light); }
+    .form-hint {
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      margin-top: 0.75rem;
+    }
+    .form-hint i { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a href="index.html" class="navbar-brand brand-custom">🎰 TuNumeroLoteriaRD</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center gap-1">
+
+          <!-- Loterías dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Loterías
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">🏆</span> Lotería Nacional</a></li>
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">🎰</span> Leidsa</a></li>
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">🎯</span> Loteka</a></li>
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">👑</span> Lotería Real</a></li>
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">⭐</span> La Primera</a></li>
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">🍀</span> La Suerte Dominicana</a></li>
+              <li><hr class="dropdown-divider my-1" /></li>
+              <li>
+                <a class="dropdown-item text-muted" href="#">
+                  <span class="drop-icon">🌊</span> Anguila
+                  <span class="badge-pronto">Próximamente</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Estadísticas dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Estadísticas
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">🔥</span> Números Calientes</a></li>
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">❄️</span> Números Fríos</a></li>
+              <li><a class="dropdown-item" href="index.html"><span class="drop-icon">📅</span> Resultados Anteriores</a></li>
+            </ul>
+          </li>
+
+          <!-- Consultar -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-consultar" href="index.html">
+              <i class="fas fa-search me-1"></i> Consultar
+            </a>
+          </li>
+
+          <!-- Anúnciate — activo en esta página -->
+          <li class="nav-item">
+            <a class="nav-link nav-link-advertise active-page" href="advertise.html">
+              <i class="fas fa-bullhorn me-1"></i> Anúnciate
+            </a>
+          </li>
+
+          <!-- Toggle Claro / Oscuro -->
+          <li class="nav-item d-flex align-items-center ms-1">
+            <button id="toggleDarkMode" class="btn btn-sm btn-toggle-mode" title="Modo Claro">
+              <i class="fas fa-sun"></i>
+            </button>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="adv-hero">
+    <div class="container">
+      <h1 class="hero-title">Anúnciate en TuNumeroLoteriaRD</h1>
+      <p class="hero-subtitle">Llega a miles de dominicanos que consultan resultados de lotería todos los días</p>
+      <a href="#planes" class="adv-cta">
+        <i class="fas fa-rocket"></i> Ver planes
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================== STATS ===================== -->
+  <section class="adv-section">
+    <div class="container">
+      <h2 class="adv-section-title">¿Por qué anunciarte con nosotros?</h2>
+      <p class="adv-section-subtitle">Audiencia dominicana altamente segmentada y recurrente</p>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="stat-emoji">👥</div>
+            <div class="stat-value">Creciendo</div>
+            <div class="stat-label">Visitantes al mes</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="stat-emoji">📍</div>
+            <div class="stat-value">RD</div>
+            <div class="stat-label">República Dominicana</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="stat-emoji">📱</div>
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Desktop y móvil optimizado</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PLANES ===================== -->
+  <section class="adv-section" id="planes">
+    <div class="container">
+      <h2 class="adv-section-title">Opciones de publicidad</h2>
+      <p class="adv-section-subtitle">Elige el plan que mejor se adapte a tu negocio</p>
+
+      <div class="row g-4">
+
+        <!-- Plan 1: Banner Superior -->
+        <div class="col-md-4">
+          <div class="plan-card">
+            <div class="plan-header" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+              <span class="plan-icon">📢</span>
+              <span class="plan-name">Banner Superior</span>
+            </div>
+            <div class="plan-body">
+              <p class="plan-desc">Visible en la parte superior de todas las páginas del sitio. El primer elemento que ven los visitantes.</p>
+              <ul class="plan-features">
+                <li>Posicionado al tope de cada página</li>
+                <li>Alta tasa de visualización</li>
+                <li>728×90px desktop / 320×50px móvil</li>
+                <li>Enlace directo a tu sitio</li>
+              </ul>
+              <p class="plan-price">Precio: <span>A convenir</span></p>
+              <div class="plan-actions">
+                <a href="mailto:contacto@tunumeroloteriard.com?subject=Consulta%20Banner%20Superior&body=Hola%2C%20me%20interesa%20el%20plan%20Banner%20Superior."
+                   class="btn-plan-email">
+                  <i class="fas fa-envelope"></i> Contactar
+                </a>
+                <a href="https://wa.me/18091234567?text=Hola%2C%20me%20interesa%20el%20plan%20Banner%20Superior%20en%20TuNumeroLoteriaRD"
+                   target="_blank" rel="noopener" class="btn-plan-wa" title="WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan 2: Patrocinio (destacado) -->
+        <div class="col-md-4">
+          <div class="plan-card featured">
+            <div class="plan-badge-top">⭐ MÁS POPULAR</div>
+            <div class="plan-header" style="background: linear-gradient(135deg, #f59e0b, #b45309);">
+              <span class="plan-icon">🏆</span>
+              <span class="plan-name">Patrocinio</span>
+            </div>
+            <div class="plan-body">
+              <p class="plan-desc">Máxima exposición de marca. Tu logo y mención en el footer de todas las páginas más banner en la página principal.</p>
+              <ul class="plan-features">
+                <li>Mención en el footer del sitio</li>
+                <li>Banner en página principal</li>
+                <li>Publicación en redes sociales</li>
+                <li>Enlace dofollow a tu sitio</li>
+              </ul>
+              <p class="plan-price">Precio: <span>A convenir</span></p>
+              <div class="plan-actions">
+                <a href="mailto:contacto@tunumeroloteriard.com?subject=Consulta%20Patrocinio&body=Hola%2C%20me%20interesa%20el%20plan%20Patrocinio."
+                   class="btn-plan-email">
+                  <i class="fas fa-envelope"></i> Contactar
+                </a>
+                <a href="https://wa.me/18091234567?text=Hola%2C%20me%20interesa%20el%20plan%20Patrocinio%20en%20TuNumeroLoteriaRD"
+                   target="_blank" rel="noopener" class="btn-plan-wa" title="WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan 3: Banner Lateral -->
+        <div class="col-md-4">
+          <div class="plan-card">
+            <div class="plan-header" style="background: linear-gradient(135deg, #22c55e, #15803d);">
+              <span class="plan-icon">📌</span>
+              <span class="plan-name">Banner Lateral</span>
+            </div>
+            <div class="plan-body">
+              <p class="plan-desc">Sidebar derecho en pantallas de escritorio. Ideal para ofertas, servicios y negocios locales.</p>
+              <ul class="plan-features">
+                <li>Visible durante todo el scroll</li>
+                <li>Ideal para remarketing</li>
+                <li>300×250px (Medium Rectangle)</li>
+                <li>Enlace directo a tu sitio</li>
+              </ul>
+              <p class="plan-price">Precio: <span>A convenir</span></p>
+              <div class="plan-actions">
+                <a href="mailto:contacto@tunumeroloteriard.com?subject=Consulta%20Banner%20Lateral&body=Hola%2C%20me%20interesa%20el%20plan%20Banner%20Lateral."
+                   class="btn-plan-email">
+                  <i class="fas fa-envelope"></i> Contactar
+                </a>
+                <a href="https://wa.me/18091234567?text=Hola%2C%20me%20interesa%20el%20plan%20Banner%20Lateral%20en%20TuNumeroLoteriaRD"
+                   target="_blank" rel="noopener" class="btn-plan-wa" title="WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FORMULARIO ===================== -->
+  <section class="adv-section">
+    <div class="container">
+      <h2 class="adv-section-title">Envíanos tu consulta</h2>
+      <p class="adv-section-subtitle">Cuéntanos sobre tu negocio y nos pondremos en contacto</p>
+
+      <div class="form-wrapper">
+        <form id="form-contacto" novalidate>
+
+          <div class="form-row-two">
+            <div class="form-group-adv">
+              <label class="form-label-adv" for="nombre">Nombre / Empresa *</label>
+              <input type="text" id="nombre" class="form-control-adv" placeholder="Tu nombre o empresa" required />
+            </div>
+            <div class="form-group-adv">
+              <label class="form-label-adv" for="email">Email *</label>
+              <input type="email" id="email" class="form-control-adv" placeholder="tu@email.com" required />
+            </div>
+          </div>
+
+          <div class="form-group-adv">
+            <label class="form-label-adv" for="telefono">Teléfono (opcional)</label>
+            <input type="tel" id="telefono" class="form-control-adv" placeholder="+1 (809) 000-0000" />
+          </div>
+
+          <div class="form-group-adv">
+            <label class="form-label-adv" for="mensaje">Mensaje / Tipo de anuncio que te interesa *</label>
+            <textarea id="mensaje" class="form-control-adv" rows="5"
+              placeholder="Cuéntanos qué tipo de publicidad te interesa, tu presupuesto y cualquier detalle adicional..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit-adv">
+            <i class="fas fa-paper-plane"></i> Enviar consulta
+          </button>
+          <p class="form-hint mt-2">
+            <i class="fas fa-info-circle"></i>
+            Se abrirá tu cliente de correo con la información prellenada.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="py-5">
+    <div class="container">
+      <div class="row g-4">
+
+        <div class="col-md-4">
+          <p class="footer-brand mb-2">🎰 TuNumeroLoteriaRD</p>
+          <p class="footer-text mb-3">Resultados de loterías dominicanas en tiempo real.</p>
+          <div class="footer-social">
+            <a href="#" class="footer-social-link" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="footer-social-link" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="footer-social-link" title="Twitter / X" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+            <a href="#" class="footer-social-link" title="WhatsApp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <p class="footer-heading mb-3">Páginas</p>
+          <ul class="list-unstyled footer-text mb-0">
+            <li><a href="pages/nosotros.html"><i class="fas fa-chevron-right me-1 footer-chevron"></i>Nosotros</a></li>
+            <li><a href="pages/contacto.html"><i class="fas fa-chevron-right me-1 footer-chevron"></i>Contacto</a></li>
+            <li><a href="pages/privacidad.html"><i class="fas fa-chevron-right me-1 footer-chevron"></i>Política de Privacidad</a></li>
+            <li><a href="advertise.html"><i class="fas fa-chevron-right me-1 footer-chevron"></i>Anúnciate</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-4">
+          <p class="footer-heading mb-3">Aviso legal</p>
+          <p class="footer-text mb-0">Los resultados son extraídos de fuentes públicas. Verifique siempre en el establecimiento oficial.</p>
+        </div>
+
+      </div>
+
+      <hr class="footer-divider" />
+
+      <p class="text-center footer-text mb-0">
+        © <span id="footer-year"></span> TuNumeroLoteriaRD. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Shared JS (theme toggle + footer year) -->
+  <script src="app.js"></script>
+  <!-- Form submit -->
+  <script>
+    document.getElementById('form-contacto').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const nombre  = document.getElementById('nombre').value.trim();
+      const email   = document.getElementById('email').value.trim();
+      const tel     = document.getElementById('telefono').value.trim();
+      const mensaje = document.getElementById('mensaje').value.trim();
+
+      if (!nombre || !email || !mensaje) {
+        alert('Por favor completa los campos obligatorios (*).');
+        return;
+      }
+
+      const subject = encodeURIComponent(`Consulta publicitaria — ${nombre}`);
+      const body = encodeURIComponent(
+        `Nombre / Empresa: ${nombre}\n` +
+        `Email: ${email}\n` +
+        (tel ? `Teléfono: ${tel}\n` : '') +
+        `\nMensaje:\n${mensaje}`
+      );
+
+      window.location.href = `mailto:contacto@tunumeroloteriard.com?subject=${subject}&body=${body}`;
+    });
+  </script>
+
+</body>
+</html>
