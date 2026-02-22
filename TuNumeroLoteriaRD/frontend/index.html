@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tu Número Lotería RD — Resultados en Tiempo Real</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a href="index.html" class="navbar-brand brand-custom">🎰 TuNumeroLoteriaRD</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Loterías</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Lotería Nacional</a></li>
+              <li><a class="dropdown-item" href="#">Leidsa</a></li>
+              <li><a class="dropdown-item" href="#">Loteka</a></li>
+              <li><a class="dropdown-item" href="#">Lotería Real</a></li>
+              <li><a class="dropdown-item" href="#">La Suerte</a></li>
+              <li><a class="dropdown-item" href="#">La Primera</a></li>
+            </ul>
+          </li>
+          <li class="nav-item d-flex align-items-center ms-2">
+            <button id="toggleDarkMode" class="btn btn-sm btn-toggle-mode" title="Modo Claro">
+              <i class="fas fa-sun"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="container text-center">
+      <h1 class="hero-title">Resultados de Hoy</h1>
+      <p class="hero-subtitle">Números ganadores de las principales loterías dominicanas</p>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <main class="container main-content">
+    <div class="row g-4">
+
+      <!-- Lotería Nacional -->
+      <div class="col-md-6">
+        <div class="lottery-card">
+          <div class="card-header-custom" style="--gc1: #3b82f6; --gc2: #1d4ed8;">
+            <span class="card-icon">🏆</span>
+            <span class="card-name">Lotería Nacional</span>
+          </div>
+          <div class="card-body-custom">
+            <div class="fecha-badge">
+              <i class="fas fa-calendar-alt"></i>
+              <span id="fecha-nacional">Cargando...</span>
+            </div>
+            <div class="premios-container">
+              <div class="premio-item">
+                <span class="premio-label">1er Premio</span>
+                <span class="premio-numero loading" id="primer-nacional">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">2do Premio</span>
+                <span class="premio-numero loading" id="segundo-nacional">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">3er Premio</span>
+                <span class="premio-numero loading" id="tercer-nacional">...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leidsa -->
+      <div class="col-md-6">
+        <div class="lottery-card">
+          <div class="card-header-custom" style="--gc1: #22c55e; --gc2: #15803d;">
+            <span class="card-icon">🎰</span>
+            <span class="card-name">Leidsa</span>
+          </div>
+          <div class="card-body-custom">
+            <div class="fecha-badge">
+              <i class="fas fa-calendar-alt"></i>
+              <span id="fecha-leidsa">Cargando...</span>
+            </div>
+            <div class="premios-container">
+              <div class="premio-item">
+                <span class="premio-label">1er Premio</span>
+                <span class="premio-numero loading" id="primer-leidsa">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">2do Premio</span>
+                <span class="premio-numero loading" id="segundo-leidsa">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">3er Premio</span>
+                <span class="premio-numero loading" id="tercer-leidsa">...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loteka -->
+      <div class="col-md-6">
+        <div class="lottery-card">
+          <div class="card-header-custom" style="--gc1: #f97316; --gc2: #c2410c;">
+            <span class="card-icon">🎯</span>
+            <span class="card-name">Loteka</span>
+          </div>
+          <div class="card-body-custom">
+            <div class="fecha-badge">
+              <i class="fas fa-calendar-alt"></i>
+              <span id="fecha-loteka">Cargando...</span>
+            </div>
+            <div class="premios-container">
+              <div class="premio-item">
+                <span class="premio-label">1er Premio</span>
+                <span class="premio-numero loading" id="primer-loteka">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">2do Premio</span>
+                <span class="premio-numero loading" id="segundo-loteka">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">3er Premio</span>
+                <span class="premio-numero loading" id="tercer-loteka">...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lotería Real -->
+      <div class="col-md-6">
+        <div class="lottery-card">
+          <div class="card-header-custom" style="--gc1: #ef4444; --gc2: #b91c1c;">
+            <span class="card-icon">👑</span>
+            <span class="card-name">Lotería Real</span>
+          </div>
+          <div class="card-body-custom">
+            <div class="fecha-badge">
+              <i class="fas fa-calendar-alt"></i>
+              <span id="fecha-real">Cargando...</span>
+            </div>
+            <div class="premios-container">
+              <div class="premio-item">
+                <span class="premio-label">1er Premio</span>
+                <span class="premio-numero loading" id="primer-real">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">2do Premio</span>
+                <span class="premio-numero loading" id="segundo-real">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">3er Premio</span>
+                <span class="premio-numero loading" id="tercer-real">...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- La Suerte -->
+      <div class="col-md-6">
+        <div class="lottery-card">
+          <div class="card-header-custom" style="--gc1: #a855f7; --gc2: #7e22ce;">
+            <span class="card-icon">🍀</span>
+            <span class="card-name">La Suerte Dominicana</span>
+          </div>
+          <div class="card-body-custom">
+            <div class="fecha-badge">
+              <i class="fas fa-calendar-alt"></i>
+              <span id="fecha-suerte">Cargando...</span>
+            </div>
+            <div class="premios-container">
+              <div class="premio-item">
+                <span class="premio-label">1er Premio</span>
+                <span class="premio-numero loading" id="primer-suerte">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">2do Premio</span>
+                <span class="premio-numero loading" id="segundo-suerte">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">3er Premio</span>
+                <span class="premio-numero loading" id="tercer-suerte">...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- La Primera -->
+      <div class="col-md-6">
+        <div class="lottery-card">
+          <div class="card-header-custom" style="--gc1: #14b8a6; --gc2: #0f766e;">
+            <span class="card-icon">⭐</span>
+            <span class="card-name">La Primera</span>
+          </div>
+          <div class="card-body-custom">
+            <div class="fecha-badge">
+              <i class="fas fa-calendar-alt"></i>
+              <span id="fecha-primera">Cargando...</span>
+            </div>
+            <div class="premios-container">
+              <div class="premio-item">
+                <span class="premio-label">1er Premio</span>
+                <span class="premio-numero loading" id="primer-primera">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">2do Premio</span>
+                <span class="premio-numero loading" id="segundo-primera">...</span>
+              </div>
+              <div class="premio-item">
+                <span class="premio-label">3er Premio</span>
+                <span class="premio-numero loading" id="tercer-primera">...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-4">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <p class="footer-brand mb-1">🎰 TuNumeroLoteriaRD</p>
+          <p class="footer-text mb-0">Resultados de loterías dominicanas en tiempo real.</p>
+        </div>
+        <div class="col-md-4">
+          <p class="footer-heading mb-2">Páginas</p>
+          <ul class="list-unstyled footer-text mb-0">
+            <li><a href="pages/nosotros.html">Nosotros</a></li>
+            <li><a href="pages/contacto.html">Contacto</a></li>
+            <li><a href="pages/privacidad.html">Política de Privacidad</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <p class="footer-heading mb-2">Aviso legal</p>
+          <p class="footer-text mb-0">Los resultados son extraídos de fuentes públicas. Verifique siempre en el establecimiento oficial.</p>
+        </div>
+      </div>
+      <hr class="footer-divider" />
+      <p class="text-center footer-text mb-0">© 2025 TuNumeroLoteriaRD. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS (bundle incluye Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JS -->
+  <script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,362 @@
+/* ================================================
+   VARIABLES — Tema Oscuro (default)
+   Las variables de light-mode se sobreescriben abajo
+================================================ */
+:root {
+  --bg-primary:    #0f172a;
+  --bg-secondary:  #1e293b;
+  --bg-card:       #1e293b;
+  --text-primary:  #f1f5f9;
+  --text-secondary:#94a3b8;
+  --gold:          #f59e0b;
+  --gold-light:    #fcd34d;
+  --border-color:  #334155;
+  --error-color:   #f87171;
+  --loading-color: #475569;
+  --shadow:        0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-hover:  0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ================================================
+   RESET & BASE
+================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ================================================
+   LIGHT MODE OVERRIDE
+================================================ */
+body.light-mode {
+  --bg-primary:    #f1f5f9;
+  --bg-secondary:  #ffffff;
+  --bg-card:       #ffffff;
+  --text-primary:  #0f172a;
+  --text-secondary:#64748b;
+  --border-color:  #e2e8f0;
+  --shadow:        0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-hover:  0 10px 32px rgba(0, 0, 0, 0.14);
+}
+
+body.light-mode .premio-item {
+  background: rgba(0, 0, 0, 0.025);
+}
+
+/* ================================================
+   NAVBAR
+================================================ */
+.navbar {
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.75rem 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.brand-custom {
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--gold) !important;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: opacity 0.2s;
+}
+
+.brand-custom:hover {
+  opacity: 0.85;
+}
+
+.navbar-nav .nav-link {
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  color: var(--text-primary) !important;
+}
+
+.dropdown-menu {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0.4rem;
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item {
+  color: var(--text-secondary);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  padding: 0.45rem 0.75rem;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Toggle button */
+.btn-toggle-mode {
+  border: 1px solid var(--border-color);
+  color: var(--gold);
+  background: transparent;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, border-color 0.2s;
+  padding: 0;
+}
+
+.btn-toggle-mode:hover {
+  background-color: var(--border-color);
+  color: var(--gold-light);
+  border-color: var(--border-color);
+}
+
+/* Hamburger icon */
+.navbar-toggler {
+  border-color: var(--border-color);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* ================================================
+   HERO SECTION
+================================================ */
+.hero-section {
+  padding: 2.75rem 0 1.75rem;
+}
+
+.hero-title {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+/* ================================================
+   LOTTERY CARDS
+================================================ */
+.main-content {
+  padding-bottom: 5rem;
+}
+
+.lottery-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.lottery-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Card header with gradient */
+.card-header-custom {
+  background: linear-gradient(135deg, var(--gc1, #3b82f6), var(--gc2, #1d4ed8));
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  font-size: 1.85rem;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+.card-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+/* Card body */
+.card-body-custom {
+  padding: 1.25rem 1.5rem 1.5rem;
+  flex: 1;
+}
+
+.fecha-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.fecha-badge i {
+  color: var(--gold);
+  font-size: 0.78rem;
+}
+
+/* Premios */
+.premios-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.premio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.premio-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+/* Número ganador — el protagonista */
+.premio-numero {
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s ease;
+}
+
+/* Estado: cargando */
+.premio-numero.loading {
+  color: var(--loading-color);
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+/* Estado: error */
+.premio-numero.error {
+  color: var(--error-color);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* ================================================
+   FOOTER
+================================================ */
+footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.footer-brand {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--gold);
+}
+
+.footer-heading {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.footer-text {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.footer-text a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.footer-text a:hover {
+  color: var(--gold);
+}
+
+.footer-divider {
+  border-color: var(--border-color);
+  margin: 1.25rem 0 1rem;
+}
+
+/* ================================================
+   RESPONSIVE
+================================================ */
+@media (max-width: 767.98px) {
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .card-header-custom {
+    padding: 1rem 1.25rem;
+  }
+
+  .card-body-custom {
+    padding: 1rem 1.25rem 1.25rem;
+  }
+
+  .premio-numero {
+    font-size: 1.75rem;
+  }
+}
