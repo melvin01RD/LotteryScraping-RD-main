@@ -1,5 +1,5 @@
 import datetime
-from flask import Flask,jsonify, Response, request
+from flask import Flask, jsonify, Response, request
 from flask_cors import CORS, cross_origin
 import re
 import urllib.request
@@ -7,6 +7,12 @@ from bs4 import BeautifulSoup
 from xml.etree import ElementTree as ET
 import os
 import json
+from db import (
+    get_results_by_date,
+    save_results,
+    date_exists_in_db,
+    archive_and_cleanup,
+)
 
 LOTTERY_JSON = os.path.join(os.path.dirname(__file__), 'lottery.json')
 
@@ -340,5 +346,123 @@ def search_lotery20():
 	
 	data = scrapingByName("americanas/new-york-noche",search_date, "New York Noche")
 	return JsonUFT8(data)
+
+
+# ============================================================
+# ADAPTADOR: conecta scraping() existente con el formato de BD
+# ============================================================
+
+def scrape_for_date(date_str):
+    """
+    Llama a scraping() con la fecha en formato DD-MM-YYYY y convierte
+    el resultado al formato de BD: {lottery_id, draw_name, draw_date, numbers, extra}.
+    """
+    dt = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    formatted = dt.strftime('%d-%m-%Y')
+    raw = scraping(formatted)
+    seen = set()
+    results = []
+    for item in raw:
+        key = (str(item.get('id', '')), item.get('name', ''))
+        if key in seen:
+            continue
+        seen.add(key)
+        nums_raw = item.get('number', '').split('-')
+        try:
+            nums = [int(n) for n in nums_raw if n.strip()]
+        except ValueError:
+            nums = []
+        results.append({
+            'lottery_id': key[0],
+            'draw_name':  key[1],
+            'draw_date':  date_str,
+            'numbers':    nums,
+            'extra':      None,
+        })
+    return results
+
+
+# ============================================================
+# ENDPOINT: Date Picker — Cache-First
+# ============================================================
+
+@app.route('/api/results/date/<date_str>')
+def results_by_date(date_str):
+    """
+    GET /api/results/date/2025-03-11
+    1. Busca en BD (rápido)
+    2. Si no hay → scraping bajo demanda
+    3. Si scraping falla → error claro
+    """
+    try:
+        requested_date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    except ValueError:
+        return jsonify({"error": "Formato de fecha inválido. Usa YYYY-MM-DD"}), 400
+
+    today = datetime.datetime.now()
+    days_ago = (today - requested_date).days
+
+    if days_ago < 0:
+        return jsonify({"error": "No se pueden consultar fechas futuras"}), 400
+
+    results = get_results_by_date(date_str)
+    if results:
+        return jsonify({"date": date_str, "source": "database", "results": results})
+
+    MAX_DAYS_SCRAPEABLE = 365
+    if days_ago > MAX_DAYS_SCRAPEABLE:
+        return jsonify({
+            "error": "Datos históricos no disponibles",
+            "message": "Solo tenemos resultados de los últimos 12 meses",
+            "date": date_str
+        }), 404
+
+    try:
+        scraped = scrape_for_date(date_str)
+        if scraped:
+            save_results(scraped, source='on_demand')
+            return jsonify({"date": date_str, "source": "scraping", "results": scraped})
+        return jsonify({
+            "error": "Sin resultados",
+            "message": f"No se encontraron sorteos para {date_str}",
+            "date": date_str
+        }), 404
+    except Exception as e:
+        return jsonify({"error": "Error al obtener resultados", "message": str(e), "date": date_str}), 500
+
+
+# ============================================================
+# ENDPOINT: Resultados del día actual
+# ============================================================
+
+@app.route('/api/results/today')
+def results_today():
+    today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+    results = get_results_by_date(today_str)
+
+    if not results:
+        try:
+            scraped = scrape_for_date(today_str)
+            if scraped:
+                save_results(scraped, source='daily_job')
+                results = scraped
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    return jsonify({"date": today_str, "results": results})
+
+
+# ============================================================
+# ENDPOINT: Job de archivado (protegido, solo desde cron)
+# ============================================================
+
+@app.route('/api/admin/archive', methods=['POST'])
+def run_archive():
+    secret = request.headers.get('X-Admin-Secret')
+    if secret != os.getenv('ADMIN_SECRET'):
+        return jsonify({"error": "No autorizado"}), 401
+    result = archive_and_cleanup(months_to_keep=12)
+    return jsonify(result)
+
 
 app.run(port=port)
