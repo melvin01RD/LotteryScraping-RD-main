@@ -3,3 +3,6 @@ flask-cors
 beautifulsoup4
 psycopg2-binary
 python-dotenv
+pytest
+pytest-flask
+pytest-mock
