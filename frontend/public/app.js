@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ========================
   // Toggle Claro / Oscuro
-  // El tema oscuro es el default; light-mode lo activa el usuario
   // ========================
   const toggleButton = document.getElementById('toggleDarkMode');
 
@@ -50,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetEl = document.getElementById(targetId);
       if (targetEl) {
         targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Cierra el menú móvil si está abierto
         const navCollapse = document.getElementById('navbarNav');
         if (navCollapse && navCollapse.classList.contains('show')) {
           const toggler = document.querySelector('.navbar-toggler');
@@ -70,105 +68,208 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ========================
-  // Helper: fecha de hoy en DD-MM-YYYY
+  // Helpers de fecha
   // ========================
-  const todayDDMMYYYY = () => {
+  const hoyISO = () => {
     const now = new Date();
     return [
-      String(now.getDate()).padStart(2, '0'),
+      now.getFullYear(),
       String(now.getMonth() + 1).padStart(2, '0'),
-      now.getFullYear()
+      String(now.getDate()).padStart(2, '0')
     ].join('-');
   };
 
-  // ========================
-  // Rutas (Express proxy → Flask)
-  // ========================
-  const rutasLoterias = {
-    nacional: '/nacional',
-    leidsa:   '/leidsa',
-    loteka:   '/loteria-loteka',
-    real:     '/real',
-    suerte:   '/loteria-la-suerte',
-    primera:  '/primera'
+  // YYYY-MM-DD → DD/MM/YYYY para mostrar en UI
+  const formatDrawDate = (iso) => {
+    if (!iso) return '—';
+    const [y, m, d] = iso.split('-');
+    return `${d}/${m}/${y}`;
   };
 
   // ========================
-  // Estado de carga
+  // API unificada (nueva estructura Flask + Neon)
+  // Respuesta: { date, source: "db"|"scraping", results: [...] }
   // ========================
-  const setLoadingState = (loteria) => {
+  const API_BASE = 'http://localhost:3000';
+
+  const fetchResultados = async (isoDate) => {
+    const url = isoDate === hoyISO()
+      ? `${API_BASE}/api/results/today`
+      : `${API_BASE}/api/results/date/${isoDate}`;
+    const r = await fetch(url);
+    const body = await r.json();
+    if (!r.ok) throw body;
+    return body;
+  };
+
+  // ========================
+  // Mapeo draw_name → clave de card
+  // ========================
+  const DRAW_MAP = [
+    { key: 'nacional', kw: ['nacional'] },
+    { key: 'leidsa',   kw: ['leidsa']   },
+    { key: 'loteka',   kw: ['loteka']   },
+    { key: 'real',     kw: ['real']     },
+    { key: 'suerte',   kw: ['suerte']   },
+    { key: 'primera',  kw: ['primera']  },
+  ];
+
+  const nameToKey = (drawName) => {
+    const lower = (drawName || '').toLowerCase();
+    return DRAW_MAP.find(m => m.kw.some(k => lower.includes(k)))?.key ?? null;
+  };
+
+  const lotteryLabels = {
+    nacional: 'Lotería Nacional',
+    leidsa:   'Leidsa',
+    loteka:   'Loteka',
+    real:     'Lotería Real',
+    suerte:   'La Suerte Dominicana',
+    primera:  'La Primera',
+  };
+
+  const ALL_KEYS = Object.keys(lotteryLabels);
+
+  // ========================
+  // Estados de los cards
+  // ========================
+  const setLoadingState = (key) => {
     ['primer', 'segundo', 'tercer'].forEach(premio => {
-      const el = document.getElementById(`${premio}-${loteria}`);
+      const el = document.getElementById(`${premio}-${key}`);
       if (el) {
         el.textContent = '...';
         el.className = 'premio-numero loading';
       }
     });
+    const fechaEl = document.getElementById(`fecha-${key}`);
+    if (fechaEl) fechaEl.textContent = 'Cargando...';
+    const badgeEl = document.getElementById(`badge-${key}`);
+    if (badgeEl) badgeEl.textContent = '';
   };
 
-  // ========================
-  // Estado de error
-  // ========================
-  const setErrorState = (loteria) => {
+  const setErrorState = (key) => {
     ['primer', 'segundo', 'tercer'].forEach(premio => {
-      const el = document.getElementById(`${premio}-${loteria}`);
+      const el = document.getElementById(`${premio}-${key}`);
       if (el) {
-        el.textContent = 'No disponible';
+        el.textContent = '—';
         el.className = 'premio-numero error';
       }
     });
-    const fechaEl = document.getElementById(`fecha-${loteria}`);
+    const fechaEl = document.getElementById(`fecha-${key}`);
     if (fechaEl) fechaEl.textContent = '—';
+    const badgeEl = document.getElementById(`badge-${key}`);
+    if (badgeEl) badgeEl.textContent = '';
   };
 
   // ========================
-  // Mostrar resultados
-  // Flask devuelve: [{ id, name, date, number: "12-34-56" }]
+  // Badge de fuente (En vivo / Desde caché)
   // ========================
-  const mostrarResultados = (data, loteria) => {
-    if (!Array.isArray(data) || data.length === 0) {
-      setErrorState(loteria);
-      return;
+  const updateSourceBadge = (source) => {
+    const el = document.getElementById('source-indicator');
+    if (!el) return;
+    if (source === 'scraping') {
+      el.textContent = '🔴 En vivo';
+      el.className = 'source-badge source-live';
+      el.hidden = false;
+    } else if (source === 'db') {
+      el.textContent = '🗄️ Desde caché';
+      el.className = 'source-badge source-cache';
+      el.hidden = false;
+    } else {
+      el.hidden = true;
     }
+  };
 
-    const item = data[0];
-    const premios = item.number ? item.number.split('-') : [];
+  // ========================
+  // Banner de error global
+  // ========================
+  const ERROR_MESSAGES = {
+    bd_connection:  'No se pudo conectar a la base de datos. Verifique que el servidor esté activo.',
+    no_results:     'No hay resultados disponibles para esta fecha.',
+    scraping_error: 'Error al obtener los datos en tiempo real. Los resultados podrían no estar disponibles aún.',
+    default:        'Error al obtener los resultados. Intente de nuevo más tarde.',
+  };
 
-    const fechaEl = document.getElementById(`fecha-${loteria}`);
-    if (fechaEl) fechaEl.textContent = item.date || '—';
+  const errorMsg = (err) =>
+    ERROR_MESSAGES[err?.error] ||
+    (err?.status === 503 ? ERROR_MESSAGES.bd_connection :
+     err?.status === 404 ? ERROR_MESSAGES.no_results :
+     ERROR_MESSAGES.default);
 
-    ['primer', 'segundo', 'tercer'].forEach((premio, i) => {
-      const el = document.getElementById(`${premio}-${loteria}`);
+  const showError = (msg) => {
+    const el = document.getElementById('global-error');
+    if (el) { el.textContent = msg; el.hidden = false; }
+  };
+
+  const clearError = () => {
+    const el = document.getElementById('global-error');
+    if (el) el.hidden = true;
+  };
+
+  // ========================
+  // Renderizar un resultado en su card
+  // item: { draw_name, draw_date, numbers: [...], extra }
+  // ========================
+  const renderCard = (item) => {
+    const key = nameToKey(item.draw_name);
+    if (!key) return;
+
+    const nums = item.numbers || [];
+    const dateStr = formatDrawDate(item.draw_date);
+
+    const fechaEl = document.getElementById(`fecha-${key}`);
+    if (fechaEl) fechaEl.textContent = dateStr;
+
+    ['primer', 'segundo', 'tercer'].forEach((p, i) => {
+      const el = document.getElementById(`${p}-${key}`);
       if (el) {
-        el.textContent = premios[i] ?? '—';
+        el.textContent = nums[i] !== undefined ? String(nums[i]).padStart(2, '0') : '—';
         el.className = 'premio-numero';
       }
     });
 
-    // Badge Hoy / fecha anterior
-    const badgeEl = document.getElementById(`badge-${loteria}`);
-    if (badgeEl && item.date) {
-      const esHoy = item.date === todayDDMMYYYY();
-      badgeEl.textContent = esHoy ? '🟢 Hoy' : `🟡 ${item.date}`;
+    const badgeEl = document.getElementById(`badge-${key}`);
+    if (badgeEl) {
+      const esHoy = item.draw_date === hoyISO();
+      badgeEl.textContent = esHoy ? '🟢 Hoy' : `🟡 ${dateStr}`;
       badgeEl.className = 'card-badge ms-auto';
     }
   };
 
   // ========================
-  // Fetch de resultados (acepta fecha opcional en formato dd-mm-yyyy)
+  // Cargar resultados por fecha (ISO: YYYY-MM-DD)
   // ========================
-  const obtenerResultados = async (ruta, loteria, fechaParam = null) => {
-    setLoadingState(loteria);
+  const cargarFecha = async (isoDate) => {
+    clearError();
+    ALL_KEYS.forEach(setLoadingState);
+
     try {
-      let url = `http://localhost:3000${ruta}`;
-      if (fechaParam) url += `?date=${fechaParam}`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data = await response.json();
-      mostrarResultados(data, loteria);
-    } catch (error) {
-      console.error(`Error al obtener los datos de ${loteria}:`, error);
-      setErrorState(loteria);
+      const data = await fetchResultados(isoDate);
+
+      // Resetear todos a sin datos antes de renderizar
+      ALL_KEYS.forEach(setErrorState);
+
+      if (!data.results || data.results.length === 0) {
+        showError(ERROR_MESSAGES.no_results);
+        updateSourceBadge(null);
+        return;
+      }
+
+      updateSourceBadge(data.source);
+
+      // Renderizar cada resultado en su card (primera coincidencia por clave)
+      const used = new Set();
+      data.results.forEach(item => {
+        const key = nameToKey(item.draw_name);
+        if (!key || used.has(key)) return;
+        used.add(key);
+        renderCard(item);
+      });
+    } catch (err) {
+      ALL_KEYS.forEach(setErrorState);
+      showError(errorMsg(err));
+      updateSourceBadge(null);
+      console.error('Error cargando resultados:', err);
     }
   };
 
@@ -179,49 +280,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnHoy      = document.getElementById('btn-hoy');
   const heroTitle   = document.getElementById('hero-title');
 
-  const hoyISO = () => {
-    const now = new Date();
-    return [
-      now.getFullYear(),
-      String(now.getMonth() + 1).padStart(2, '0'),
-      String(now.getDate()).padStart(2, '0')
-    ].join('-');
-  };
-
-  const isoToBackend = (iso) => {
-    const [y, m, d] = iso.split('-');
-    return `${d}-${m}-${y}`;
-  };
-
-  const cargarFecha = (isoDate) => {
-    const hoy = hoyISO();
-    const esHoy = isoDate === hoy;
-    if (heroTitle) {
-      heroTitle.textContent = esHoy
-        ? 'Resultados de Hoy'
-        : `Resultados del ${isoToBackend(isoDate)}`;
-    }
-    const fechaParam = esHoy ? null : isoToBackend(isoDate);
-    for (const [loteria, ruta] of Object.entries(rutasLoterias)) {
-      obtenerResultados(ruta, loteria, fechaParam);
-    }
+  const updateHeroTitle = (isoDate) => {
+    if (!heroTitle) return;
+    heroTitle.textContent = isoDate === hoyISO()
+      ? 'Resultados de Hoy'
+      : `Resultados del ${formatDrawDate(isoDate)}`;
   };
 
   if (fechaPicker) {
     const hoy = hoyISO();
     fechaPicker.max   = hoy;
     fechaPicker.value = hoy;
-    fechaPicker.addEventListener('change', () => cargarFecha(fechaPicker.value));
+    fechaPicker.addEventListener('change', () => {
+      updateHeroTitle(fechaPicker.value);
+      cargarFecha(fechaPicker.value);
+    });
   }
 
   if (btnHoy && fechaPicker) {
     btnHoy.addEventListener('click', () => {
       fechaPicker.value = hoyISO();
+      updateHeroTitle(fechaPicker.value);
       cargarFecha(fechaPicker.value);
     });
   }
 
-  // Lanzar carga inicial solo si esta página tiene las cards de loterías
+  // Carga inicial solo si hay cards de loterías en la página
   if (document.getElementById('primer-nacional')) {
     cargarFecha(hoyISO());
   }
@@ -229,18 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ========================
   // Consultar Números
   // ========================
-  const lotteryLabels = {
-    nacional: 'Lotería Nacional',
-    leidsa:   'Leidsa',
-    loteka:   'Loteka',
-    real:     'Lotería Real',
-    suerte:   'La Suerte Dominicana',
-    primera:  'La Primera',
-  };
-
   const numInputIds = ['num1', 'num2', 'num3'];
 
-  // Auto-avance entre inputs y solo dígitos
   numInputIds.forEach((id, index) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -256,37 +330,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultadosEl = document.getElementById('consultar-resultados');
 
   const consultarNumeros = async () => {
-    const nums = numInputIds
+    const queryNums = numInputIds
       .map(id => (document.getElementById(id)?.value || '').trim())
       .filter(n => n !== '')
       .map(n => n.padStart(2, '0'));
 
-    if (nums.length === 0) return;
+    if (queryNums.length === 0) return;
 
     if (resultadosEl) resultadosEl.innerHTML = '<p class="consultar-loading">Buscando...</p>';
 
     const matches = [];
-
-    await Promise.all(
-      Object.entries(rutasLoterias).map(async ([loteria, ruta]) => {
-        try {
-          const response = await fetch(`http://localhost:3000${ruta}`);
-          if (!response.ok) return;
-          const data = await response.json();
-          if (!Array.isArray(data)) return;
-          data.forEach(item => {
-            const prizes = (item.number || '').split('-').map(p => p.padStart(2, '0'));
-            if (nums.some(n => prizes.includes(n))) {
-              matches.push({
-                loteria: lotteryLabels[loteria] || item.name,
-                fecha:   item.date || '—',
-                numero:  item.number || '—',
-              });
-            }
+    try {
+      const data = await fetchResultados(hoyISO());
+      (data.results || []).forEach(item => {
+        const key = nameToKey(item.draw_name);
+        const nums = (item.numbers || []).map(n => String(n).padStart(2, '0'));
+        if (queryNums.some(n => nums.includes(n))) {
+          matches.push({
+            loteria: lotteryLabels[key] || item.draw_name,
+            fecha:   formatDrawDate(item.draw_date),
+            numero:  nums.join('-'),
           });
-        } catch { /* ignorar error por lotería */ }
-      })
-    );
+        }
+      });
+    } catch { /* ignorar error */ }
 
     if (!resultadosEl) return;
 
@@ -333,7 +400,6 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (tabName === 'frios') loadFrios();
   };
 
-  // Abrir panel desde el menú
   document.querySelectorAll('.stats-nav-link[data-stats]').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
@@ -341,36 +407,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Cambio de pestaña dentro del panel
   document.querySelectorAll('.stats-tab').forEach(tab => {
     tab.addEventListener('click', () => openStatsPanel(tab.getAttribute('data-tab')));
   });
 
-  // Cerrar panel
   document.getElementById('btn-stats-close')?.addEventListener('click', () => {
     statsPanel?.setAttribute('hidden', '');
   });
 
-  // Fetch todos los números disponibles → { número: frecuencia }
+  // Frecuencias desde el endpoint unificado
   const fetchAllNumbers = async () => {
-    const results = await Promise.allSettled(
-      Object.values(rutasLoterias).map(async ruta => {
-        const r = await fetch(`http://localhost:3000${ruta}`);
-        if (!r.ok) throw new Error();
-        const data = await r.json();
-        if (!Array.isArray(data) || data.length === 0) throw new Error();
-        return data.flatMap(item =>
-          (item.number || '').split('-').map(n => n.padStart(2, '0'))
-        );
-      })
-    );
-    const freq = {};
-    results.forEach(r => {
-      if (r.status === 'fulfilled') {
-        r.value.forEach(n => { freq[n] = (freq[n] || 0) + 1; });
-      }
-    });
-    return freq;
+    try {
+      const data = await fetchResultados(hoyISO());
+      const freq = {};
+      (data.results || []).forEach(item => {
+        (item.numbers || []).forEach(n => {
+          const key = String(n).padStart(2, '0');
+          freq[key] = (freq[key] || 0) + 1;
+        });
+      });
+      return freq;
+    } catch {
+      return {};
+    }
   };
 
   const renderFreqList = (el, entries) => {
@@ -423,36 +482,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!el || !fechaAntEl) return;
     el.innerHTML = '<p class="consultar-loading">Cargando...</p>';
 
-    const fechaParam = isoToBackend(fechaAntEl.value);
-    const nombres = {
-      nacional: 'Lotería Nacional', leidsa: 'Leidsa', loteka: 'Loteka',
-      real: 'Lotería Real', suerte: 'La Suerte Dominicana', primera: 'La Primera',
-    };
+    try {
+      const data = await fetchResultados(fechaAntEl.value);
+      const results = data.results || [];
 
-    const results = await Promise.allSettled(
-      Object.entries(rutasLoterias).map(async ([key, ruta]) => {
-        const r = await fetch(`http://localhost:3000${ruta}?date=${fechaParam}`);
-        if (!r.ok) throw new Error();
-        const data = await r.json();
-        if (!Array.isArray(data) || data.length === 0) throw new Error();
-        return { name: nombres[key], item: data[0] };
-      })
-    );
+      if (results.length === 0) {
+        el.innerHTML = '<p class="consultar-vacio">No se encontraron resultados para esa fecha.</p>';
+        return;
+      }
 
-    const rows = results
-      .filter(r => r.status === 'fulfilled')
-      .map(r => {
-        const { name, item } = r.value;
+      const rows = results.map(item => {
+        const key = nameToKey(item.draw_name);
+        const nums = (item.numbers || []).map(n => String(n).padStart(2, '0')).join('-');
         return `<div class="anteriores-row">
-          <span class="ant-name">${name}</span>
-          <span class="ant-fecha">${item.date || '—'}</span>
-          <span class="ant-num">${item.number || '—'}</span>
+          <span class="ant-name">${lotteryLabels[key] || item.draw_name}</span>
+          <span class="ant-fecha">${formatDrawDate(item.draw_date)}</span>
+          <span class="ant-num">${nums || '—'}</span>
         </div>`;
       });
-
-    el.innerHTML = rows.length > 0
-      ? rows.join('')
-      : '<p class="consultar-vacio">No se encontraron resultados para esa fecha.</p>';
+      el.innerHTML = rows.join('');
+    } catch (err) {
+      el.innerHTML = `<p class="consultar-vacio">${errorMsg(err)}</p>`;
+    }
   });
 
   // ========================
@@ -461,7 +512,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-refresh')?.addEventListener('click', () => {
     const btn = document.getElementById('btn-refresh');
     btn?.classList.add('spinning');
-    // Invalidar caché de estadísticas para forzar recarga
     const cal = document.getElementById('calientes-content');
     const fri = document.getElementById('frios-content');
     if (cal) delete cal.dataset.loaded;

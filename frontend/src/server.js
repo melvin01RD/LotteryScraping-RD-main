@@ -2,17 +2,22 @@ import 'dotenv/config';
 import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
+import { fileURLToPath } from 'url';
+import path from 'path';
 import { getLeidsa, getNacional, getLoteka, getLaSuerte } from './scrapper.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const FLASK_URL = process.env.FLASK_URL || 'http://localhost:5000';
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, '../public')));
 
-// Health check
+// Frontend entry point
 app.get('/', (req, res) => {
-    res.send('API de loterías corriendo correctamente');
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // ── Rutas con fallback via scrapper.js ─────────────────────────
@@ -84,6 +89,38 @@ app.get('/gana-mas', async (req, res) => {
         res.json(response.data);
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener los datos de Gana Más' });
+    }
+});
+
+// ── Nueva API unificada con Neon PostgreSQL ─────────────────────
+
+app.get('/api/results/today', async (req, res) => {
+    try {
+        const response = await axios.get(`${FLASK_URL}/api/results/today`, { timeout: 10000 });
+        res.json(response.data);
+    } catch (error) {
+        if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
+            res.status(503).json({ error: 'bd_connection', message: 'No se pudo conectar al servidor de datos' });
+        } else if (error.response?.status === 404) {
+            res.status(404).json({ error: 'no_results', message: 'No hay resultados disponibles para hoy' });
+        } else {
+            res.status(500).json({ error: 'scraping_error', message: 'Error al obtener los resultados en tiempo real' });
+        }
+    }
+});
+
+app.get('/api/results/date/:date', async (req, res) => {
+    try {
+        const response = await axios.get(`${FLASK_URL}/api/results/date/${req.params.date}`, { timeout: 10000 });
+        res.json(response.data);
+    } catch (error) {
+        if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
+            res.status(503).json({ error: 'bd_connection', message: 'No se pudo conectar al servidor de datos' });
+        } else if (error.response?.status === 404) {
+            res.status(404).json({ error: 'no_results', message: 'No hay resultados disponibles para esta fecha' });
+        } else {
+            res.status(500).json({ error: 'scraping_error', message: 'Error al obtener los resultados en tiempo real' });
+        }
     }
 });
 
