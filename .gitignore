@@ -1,34 +1,70 @@
-# Node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-package-lock.json
-
-# Python
+﻿# Python / Flask
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 .Python
-env/
-venv/
+*.egg
 *.egg-info/
 dist/
 build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+venv/
+env/
+.env
+.venv
+ENV/
 
-# IDEs
-.vscode/
-.idea/
+# Flask
+instance/
+.webassets-cache
+flask_session/
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
+# Node / Express
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.npm
 
 # Variables de entorno
 .env
 .env.local
+.env.development
 .env.production
+.env*.local
+
+# Logs
+logs/
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Datos / Caché de scraping
+*.cache
+cache/
+scraped_data/
+*.json.bak
+
+# Outputs temporales
+tmp/
+temp/
