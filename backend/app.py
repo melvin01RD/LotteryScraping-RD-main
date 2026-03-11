@@ -440,16 +440,18 @@ def results_today():
     today_str = datetime.datetime.now().strftime('%Y-%m-%d')
     results = get_results_by_date(today_str)
 
-    if not results:
-        try:
-            scraped = scrape_for_date(today_str)
-            if scraped:
-                save_results(scraped, source='daily_job')
-                results = scraped
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    if results:
+        return jsonify({"date": today_str, "source": "database", "results": results})
 
-    return jsonify({"date": today_str, "results": results})
+    try:
+        scraped = scrape_for_date(today_str)
+        if scraped:
+            save_results(scraped, source='daily_job')
+            return jsonify({"date": today_str, "source": "scraping", "results": scraped})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    return jsonify({"date": today_str, "source": "scraping", "results": []})
 
 
 # ============================================================
@@ -465,4 +467,5 @@ def run_archive():
     return jsonify(result)
 
 
-app.run(port=port)
+if __name__ == '__main__':
+    app.run(port=port)

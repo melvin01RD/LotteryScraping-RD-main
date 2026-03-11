@@ -7,12 +7,7 @@ from unittest.mock import patch
 BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BACKEND_DIR)
 
-# app.py runs app.run(port=port) at module level — patch it before importing
-# so the import doesn't block the test process.
-_run_patch = patch("flask.Flask.run")
-_run_patch.start()
-
-import app as _app_module  # noqa: E402 — must come after the patch above
+import app as _app_module
 
 
 SAMPLE_RESULTS = [

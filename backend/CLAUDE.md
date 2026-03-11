@@ -55,11 +55,71 @@ flask-cors
 beautifulsoup4
 psycopg2-binary
 python-dotenv
+pytest
+pytest-flask
+pytest-mock
 ```
 
 ### `schema.sql`
 Esquema de la base de datos Neon PostgreSQL (tablas `lottery_results`, `lottery_monthly_stats`,
 `retention_log` y la constraint `uq_lottery_draw_date`).
+
+---
+
+## Endpoints disponibles (puerto 5000)
+
+### API unificada (Neon PostgreSQL)
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/api/results/today` | Resultados de hoy — BD primero, scraping si no hay. Retorna `{date, source, results}` |
+| GET | `/api/results/date/<YYYY-MM-DD>` | Resultados por fecha — BD primero, scraping bajo demanda |
+| POST | `/api/admin/archive` | Job de archivado mensual (requiere header `X-Admin-Secret`) |
+
+### Endpoints de scraping genéricos
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/` | Todas las loterías (`?date=DD-MM-YYYY`) |
+| GET | `/search?name=X` | Buscar por nombre (`?date=DD-MM-YYYY`) |
+
+### Loterías nacionales dominicanas
+
+| Método | Ruta | Lotería |
+|--------|------|---------|
+| GET | `/loteria-nacional` | Lotería Nacional (quiniela) |
+| GET | `/loterias-nacionales` | Todas las de Lotería Nacional |
+| GET | `/loteria-leidsa` | Quiniela Leidsa |
+| GET | `/loteria-real` | Quiniela Real |
+| GET | `/loteria-loteka` | Quiniela Loteka |
+| GET | `/loteria-gana-mas` | Gana Más |
+| GET | `/loteria-primera` | La Primera |
+| GET | `/loteria-primera-12am` | La Primera Día (medio día) |
+| GET | `/loteria-primera-noche` | Primera Noche |
+| GET | `/loteria-la-suerte` | La Suerte (búsqueda general) |
+| GET | `/loteria-la-suerte-12am` | La Suerte 12:30 |
+| GET | `/loteria-la-suerte-tarde` | La Suerte 18:00 |
+| GET | `/loteria-lotedom` | Quiniela LoteDom |
+
+### Loterías Anguila
+
+| Método | Ruta | Lotería |
+|--------|------|---------|
+| GET | `/loteria-anguila` | Anguila (todas) |
+| GET | `/loteria-anguila-10am` | Anguila Mañana |
+| GET | `/loteria-anguila-12am` | Anguila Medio Día |
+| GET | `/loteria-anguila-6pm` | Anguila Tarde |
+| GET | `/loteria-anguila-9pm` | Anguila Noche |
+
+### Loterías americanas
+
+| Método | Ruta | Lotería |
+|--------|------|---------|
+| GET | `/loteria-americana` | Americanas (todas) |
+| GET | `/loteria-florida-tarde` | Florida Día |
+| GET | `/loteria-florida-noche` | Florida Noche |
+| GET | `/loteria-new-york-12am` | New York Tarde |
+| GET | `/loteria-new-york-noche` | New York Noche |
 
 ---
 
