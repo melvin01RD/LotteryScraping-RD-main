@@ -110,8 +110,12 @@ app.get('/api/results/today', async (req, res) => {
 });
 
 app.get('/api/results/date/:date', async (req, res) => {
+    const { date } = req.params;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        return res.status(400).json({ error: 'invalid_date', message: 'Formato de fecha inválido. Use YYYY-MM-DD' });
+    }
     try {
-        const response = await axios.get(`${FLASK_URL}/api/results/date/${req.params.date}`, { timeout: 10000 });
+        const response = await axios.get(`${FLASK_URL}/api/results/date/${date}`, { timeout: 10000 });
         res.json(response.data);
     } catch (error) {
         if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
@@ -124,7 +128,12 @@ app.get('/api/results/date/:date', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`Flask URL: ${FLASK_URL}`);
-});
+export { app };
+
+const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+if (isMain) {
+    app.listen(PORT, () => {
+        console.log(`Servidor corriendo en http://localhost:${PORT}`);
+        console.log(`Flask URL: ${FLASK_URL}`);
+    });
+}
