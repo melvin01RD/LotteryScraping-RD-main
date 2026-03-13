@@ -864,43 +864,6 @@ body.light-mode .date-input::-webkit-calendar-picker-indicator {
   padding: 2.5rem 1rem;
 }
 
-/* ================================================
-   SOURCE BADGE (En vivo / Desde caché)
-================================================ */
-.source-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.22rem 0.65rem;
-  border-radius: 9999px;
-  margin-top: 0.85rem;
-  letter-spacing: 0.02em;
-  transition: opacity 0.3s ease;
-}
-
-.source-live {
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.25);
-}
-
-.source-cache {
-  background: rgba(148, 163, 184, 0.1);
-  color: var(--text-secondary);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-}
-
-body.light-mode .source-live {
-  background: rgba(239, 68, 68, 0.08);
-  color: #dc2626;
-}
-
-body.light-mode .source-cache {
-  background: rgba(100, 116, 139, 0.08);
-  color: #64748b;
-}
 
 /* ================================================
    GLOBAL ERROR BANNER
@@ -941,5 +904,231 @@ body.light-mode .global-error {
 
   .premio-numero {
     font-size: 1.75rem;
+  }
+}
+
+/* ================================================
+   MOBILE GLOBAL
+================================================ */
+
+/* Scroll suave y prevención de overflow horizontal */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Evitar zoom en inputs en iOS (font-size >= 16px) */
+@media (max-width: 767px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Touch targets mínimos WCAG 2.5.5 */
+@media (max-width: 767px) {
+  button,
+  a,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Excepciones para links inline de texto */
+  p a, li a, span a {
+    min-height: unset;
+    min-width: unset;
+  }
+}
+
+/* Tipografía fluida */
+@media (max-width: 575px) {
+  h1 { font-size: clamp(1.4rem, 5vw, 2rem); }
+  h2 { font-size: clamp(1.2rem, 4vw, 1.6rem); }
+  h3 { font-size: clamp(1rem, 3.5vw, 1.3rem); }
+
+  body {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+/* ================================================
+   TAREA 1 — Navbar mobile
+================================================ */
+@media (max-width: 767px) {
+  .navbar-brand {
+    font-size: 1rem;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .navbar-collapse {
+    padding: 0.5rem 0;
+  }
+
+  .navbar-nav .nav-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .navbar-nav .dropdown-menu {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding-left: 1rem;
+  }
+
+  #darkModeToggle {
+    margin-top: 0.5rem;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* ================================================
+   TAREA 2 — Cards de lotería responsive
+================================================ */
+@media (max-width: 575px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .lottery-numbers,
+  .prize-number,
+  .numero-resultado {
+    font-size: 2rem !important;
+    letter-spacing: 0.15em;
+  }
+
+  .card-title,
+  .lottery-name {
+    font-size: 0.95rem;
+  }
+
+  .card-subtitle,
+  .lottery-date {
+    font-size: 0.8rem;
+  }
+}
+
+/* ================================================
+   TAREA 3 — Sección "Consultar Números" responsive
+================================================ */
+@media (max-width: 575px) {
+  .consultar-form,
+  .numero-inputs {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .numero-inputs input {
+    width: 100%;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 0.75rem;
+  }
+
+  .consultar-btn,
+  [id*="consultar"],
+  [class*="btn-consultar"] {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+/* ================================================
+   TAREA 4 — Sección "Estadísticas" responsive
+================================================ */
+@media (max-width: 767px) {
+  .estadisticas-table-wrapper,
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  canvas,
+  .chart-container {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .stats-cards,
+  .metricas-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================================
+   TAREA 5 — Date picker y controles responsive
+================================================ */
+@media (max-width: 767px) {
+  input[type="date"],
+  .date-picker,
+  select.filtro {
+    width: 100%;
+    min-height: 44px;
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .date-controls,
+  .filtros-row {
+    flex-direction: column;
+  }
+}
+
+/* ================================================
+   TAREA 6 — Footer responsive
+================================================ */
+@media (max-width: 767px) {
+  footer .row > [class*="col"] {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  footer .social-links a,
+  footer [class*="social"] a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0 4px;
+  }
+}
+
+/* ================================================
+   TAREA 7 — Páginas secundarias responsive
+================================================ */
+@media (max-width: 575px) {
+  main.container,
+  main .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  form input,
+  form textarea,
+  form select {
+    width: 100%;
+    min-height: 44px;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  form button[type="submit"] {
+    width: 100%;
+    min-height: 48px;
+    font-size: 1rem;
   }
 }

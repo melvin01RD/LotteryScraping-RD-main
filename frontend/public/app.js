@@ -80,17 +80,28 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // YYYY-MM-DD → DD/MM/YYYY para mostrar en UI
+  // También maneja formatos de fecha no-ISO (ej: "Wed, 11 Mar 2026 00:00:00 GMT")
   const formatDrawDate = (iso) => {
     if (!iso) return '—';
-    const [y, m, d] = iso.split('-');
-    return `${d}/${m}/${y}`;
+    const parts = iso.split('-');
+    if (parts.length === 3 && parts[0].length === 4) {
+      const [y, m, d] = parts;
+      return `${d}/${m}/${y}`;
+    }
+    const date = new Date(iso);
+    if (isNaN(date.getTime())) return iso;
+    return [
+      String(date.getUTCDate()).padStart(2, '0'),
+      String(date.getUTCMonth() + 1).padStart(2, '0'),
+      date.getUTCFullYear()
+    ].join('/');
   };
 
   // ========================
   // API unificada (nueva estructura Flask + Neon)
   // Respuesta: { date, source: "db"|"scraping", results: [...] }
   // ========================
-  const API_BASE = 'http://localhost:3000';
+  const API_BASE = '';
 
   const fetchResultados = async (isoDate) => {
     const url = isoDate === hoyISO()
@@ -162,24 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ========================
-  // Badge de fuente (En vivo / Desde caché)
-  // ========================
-  const updateSourceBadge = (source) => {
-    const el = document.getElementById('source-indicator');
-    if (!el) return;
-    if (source === 'scraping') {
-      el.textContent = '🔴 En vivo';
-      el.className = 'source-badge source-live';
-      el.hidden = false;
-    } else if (source === 'db') {
-      el.textContent = '🗄️ Desde caché';
-      el.className = 'source-badge source-cache';
-      el.hidden = false;
-    } else {
-      el.hidden = true;
-    }
-  };
-
   // ========================
   // Banner de error global
   // ========================
@@ -251,11 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!data.results || data.results.length === 0) {
         showError(ERROR_MESSAGES.no_results);
-        updateSourceBadge(null);
         return;
       }
-
-      updateSourceBadge(data.source);
 
       // Renderizar cada resultado en su card (primera coincidencia por clave)
       const used = new Set();
@@ -268,7 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       ALL_KEYS.forEach(setErrorState);
       showError(errorMsg(err));
-      updateSourceBadge(null);
       console.error('Error cargando resultados:', err);
     }
   };

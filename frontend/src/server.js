@@ -130,7 +130,7 @@ app.get('/api/results/date/:date', async (req, res) => {
 
 export { app };
 
-const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+const isMain = path.resolve(process.argv[1]).toLowerCase() === path.resolve(fileURLToPath(import.meta.url)).toLowerCase();
 if (isMain) {
     app.listen(PORT, () => {
         console.log(`Servidor corriendo en http://localhost:${PORT}`);
