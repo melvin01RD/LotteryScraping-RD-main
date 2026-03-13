@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.loteriasdominicanas.app/sitemap.xml
+
+# Bloquear rutas internas que no deben indexarse
+Disallow: /src/
+Disallow: /.env
+Disallow: /node_modules/

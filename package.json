@@ -1,0 +1,12 @@
+{
+  "name": "lottery-scraping-rd",
+  "version": "1.0.0",
+  "description": "Resultados en tiempo real de loterías dominicanas",
+  "scripts": {
+    "start": "concurrently --kill-others-on-fail --prefix \"[{name}]\" --names \"flask,express\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" \"cd backend && python app.py\" \"cd frontend && node src/server.js\"",
+    "stop": "taskkill /F /IM python.exe & taskkill /F /IM node.exe"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
