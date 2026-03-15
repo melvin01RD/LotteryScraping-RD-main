@@ -887,6 +887,64 @@ body.light-mode .global-error {
 }
 
 /* ================================================
+   LOTO – SUPER LOTO MÁS
+================================================ */
+.loto-schedule-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.loto-balls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+}
+
+.loto-ball {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.4);
+  transition: transform 0.15s ease;
+}
+
+.loto-ball:hover {
+  transform: scale(1.08);
+}
+
+.loto-ball-extra {
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+.loto-ball.loading {
+  background: var(--loading-color);
+  color: transparent;
+  box-shadow: none;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loto-ball.error {
+  background: var(--error-color);
+  box-shadow: none;
+}
+
+/* ================================================
    RESPONSIVE
 ================================================ */
 @media (max-width: 767.98px) {

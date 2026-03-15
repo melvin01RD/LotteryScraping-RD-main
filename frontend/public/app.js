@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const DRAW_MAP = [
     { key: 'nacional', kw: ['nacional'] },
     { key: 'leidsa',   kw: ['leidsa']   },
+    { key: 'loto-mas', kw: ['loto']     },
     { key: 'loteka',   kw: ['loteka']   },
     { key: 'real',     kw: ['real']     },
     { key: 'suerte',   kw: ['suerte']   },
@@ -131,12 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const lotteryLabels = {
-    nacional: 'Lotería Nacional',
-    leidsa:   'Leidsa',
-    loteka:   'Loteka',
-    real:     'Lotería Real',
-    suerte:   'La Suerte Dominicana',
-    primera:  'La Primera',
+    nacional:  'Lotería Nacional',
+    leidsa:    'Leidsa',
+    'loto-mas':'Loto – Super Loto Más',
+    loteka:    'Loteka',
+    real:      'Lotería Real',
+    suerte:    'La Suerte Dominicana',
+    primera:   'La Primera',
   };
 
   const ALL_KEYS = Object.keys(lotteryLabels);
@@ -145,13 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Estados de los cards
   // ========================
   const setLoadingState = (key) => {
-    ['primer', 'segundo', 'tercer'].forEach(premio => {
-      const el = document.getElementById(`${premio}-${key}`);
-      if (el) {
-        el.textContent = '...';
-        el.className = 'premio-numero loading';
-      }
-    });
+    if (key === 'loto-mas') {
+      const ballsEl = document.getElementById('loto-mas-balls');
+      if (ballsEl) ballsEl.innerHTML = '<span class="loto-ball loading">…</span>';
+    } else {
+      ['primer', 'segundo', 'tercer'].forEach(premio => {
+        const el = document.getElementById(`${premio}-${key}`);
+        if (el) {
+          el.textContent = '...';
+          el.className = 'premio-numero loading';
+        }
+      });
+    }
     const fechaEl = document.getElementById(`fecha-${key}`);
     if (fechaEl) fechaEl.textContent = 'Cargando...';
     const badgeEl = document.getElementById(`badge-${key}`);
@@ -159,13 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const setErrorState = (key) => {
-    ['primer', 'segundo', 'tercer'].forEach(premio => {
-      const el = document.getElementById(`${premio}-${key}`);
-      if (el) {
-        el.textContent = '—';
-        el.className = 'premio-numero error';
-      }
-    });
+    if (key === 'loto-mas') {
+      const ballsEl = document.getElementById('loto-mas-balls');
+      if (ballsEl) ballsEl.innerHTML = '<span class="loto-ball error">—</span>';
+    } else {
+      ['primer', 'segundo', 'tercer'].forEach(premio => {
+        const el = document.getElementById(`${premio}-${key}`);
+        if (el) {
+          el.textContent = '—';
+          el.className = 'premio-numero error';
+        }
+      });
+    }
     const fechaEl = document.getElementById(`fecha-${key}`);
     if (fechaEl) fechaEl.textContent = '—';
     const badgeEl = document.getElementById(`badge-${key}`);
@@ -213,13 +225,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const fechaEl = document.getElementById(`fecha-${key}`);
     if (fechaEl) fechaEl.textContent = dateStr;
 
-    ['primer', 'segundo', 'tercer'].forEach((p, i) => {
-      const el = document.getElementById(`${p}-${key}`);
-      if (el) {
-        el.textContent = nums[i] !== undefined ? String(nums[i]).padStart(2, '0') : '—';
-        el.className = 'premio-numero';
+    if (key === 'loto-mas') {
+      const ballsEl = document.getElementById('loto-mas-balls');
+      if (ballsEl) {
+        if (nums.length === 0) {
+          ballsEl.innerHTML = '<span class="loto-ball error">—</span>';
+        } else {
+          // First 6 are main Loto numbers; remainder are Más/Super Loto Más extras
+          ballsEl.innerHTML = nums.map((n, i) =>
+            `<span class="loto-ball${i >= 6 ? ' loto-ball-extra' : ''}">${String(n).padStart(2, '0')}</span>`
+          ).join('');
+        }
       }
-    });
+    } else {
+      ['primer', 'segundo', 'tercer'].forEach((p, i) => {
+        const el = document.getElementById(`${p}-${key}`);
+        if (el) {
+          el.textContent = nums[i] !== undefined ? String(nums[i]).padStart(2, '0') : '—';
+          el.className = 'premio-numero';
+        }
+      });
+    }
 
     const badgeEl = document.getElementById(`badge-${key}`);
     if (badgeEl) {

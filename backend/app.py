@@ -311,6 +311,22 @@ def search_lotery15():
 	return JsonUFT8(data)
 
 
+@app.route("/loteria-loto-leidsa", methods=['GET'])
+def search_lotery_loto_leidsa():
+	search_date = request.args.get('date', datetime.datetime.now().strftime("%d-%m-%Y"))
+
+	data = scrapingByName("leidsa", search_date, "Loto - Super Loto Más")
+	return JsonUFT8(data)
+
+
+@app.route("/loteria-loto-mas", methods=['GET'])
+def search_lotery_loto_mas():
+	search_date = request.args.get('date', datetime.datetime.now().strftime("%d-%m-%Y"))
+
+	data = scrapingByName("leidsa", search_date, "Loto - Super Loto Más")
+	return JsonUFT8(data)
+
+
 @app.route("/loteria-americana", methods=['GET'])
 def search_lotery16():
 	search_query = request.args.get('name', None)

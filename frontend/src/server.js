@@ -92,6 +92,24 @@ app.get('/gana-mas', async (req, res) => {
     }
 });
 
+app.get('/loto-leidsa', async (req, res) => {
+    try {
+        const response = await axios.get(`${FLASK_URL}/loteria-loto-leidsa`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los datos de Loto Leidsa' });
+    }
+});
+
+app.get('/loto-mas', async (req, res) => {
+    try {
+        const response = await axios.get(`${FLASK_URL}/loteria-loto-mas`);
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los datos de Loto Más' });
+    }
+});
+
 // ── Nueva API unificada con Neon PostgreSQL ─────────────────────
 
 app.get('/api/results/today', async (req, res) => {
